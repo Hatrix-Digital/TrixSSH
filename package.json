@@ -1,0 +1,82 @@
+{
+  "name": "trixssh",
+  "productName": "TrixSSH",
+  "version": "1.0.0",
+  "description": "Fast desktop SSH client: tabs, SFTP, live metrics, snippets, broadcast and auto-updates",
+  "main": "src/main/main.js",
+  "author": "Hatrix Digital",
+  "homepage": "https://github.com/Hatrix-Digital/TrixSSH#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hatrix-Digital/TrixSSH.git"
+  },
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "postinstall": "electron-builder install-app-deps || exit 0",
+    "build": "electron-builder --win nsis && node scripts/patch-exe-icon.js",
+    "build:win": "electron-builder --win nsis --publish never",
+    "build:mac": "electron-builder --mac --publish never",
+    "build:linux": "electron-builder --linux --publish never"
+  },
+  "dependencies": {
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/xterm": "^5.5.0",
+    "ssh2": "^1.16.0"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0",
+    "pdf-to-img": "^7.0.1",
+    "png-to-ico": "^3.0.2",
+    "rcedit": "^5.0.2",
+    "sharp": "^0.35.5"
+  },
+  "build": {
+    "appId": "hr.trix.ssh",
+    "productName": "TrixSSH",
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "TrixSSH-Setup-${version}.${ext}",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "TrixSSH"
+    },
+    "mac": {
+      "target": ["dmg", "zip"],
+      "icon": "build/icon.png",
+      "category": "public.app-category.developer-tools",
+      "identity": null,
+      "artifactName": "TrixSSH-${version}.${ext}"
+    },
+    "dmg": {
+      "artifactName": "TrixSSH-${version}.dmg",
+      "title": "TrixSSH ${version}"
+    },
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "icon": "build/icon.png",
+      "category": "Development",
+      "maintainer": "Hatrix Digital <hatrixdigital@users.noreply.github.com>",
+      "artifactName": "TrixSSH-${version}-${arch}.${ext}"
+    }
+  },
+  "allowScripts": {
+    "electron@33.4.11": true,
+    "ssh2@1.17.0": true
+  }
+}

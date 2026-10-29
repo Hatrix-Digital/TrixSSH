@@ -1,0 +1,138 @@
+name: Release
+
+# Builds the Windows installer, macOS DMG and Linux AppImage when a v* tag is
+# pushed, then creates a single draft GitHub Release with all artifacts.
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            id: windows
+            npxargs: --win nsis
+          - os: macos-latest
+            id: macos
+            npxargs: --mac
+          - os: ubuntu-latest
+            id: linux
+            npxargs: --linux
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      # regenerates build/icon.ico + build/icon.png from the PDF logo
+      - name: Generate icons
+        if: matrix.id == 'windows'
+        run: node scripts/make-icon-from-logo.js
+
+      - name: Build
+        run: npx electron-builder ${{ matrix.npxargs }} --publish never
+
+      # embeds the icon + version into the Windows exe (electron-builder's
+      # editor fails on plain Windows runners without extra signing setup)
+      - name: Patch exe icon and version
+        if: matrix.id == 'windows'
+        run: node scripts/patch-exe-icon.js
+
+      - name: Prepare release assets (Windows)
+        if: matrix.id == 'windows'
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"
+          Compress-Archive -Path "dist/win-unpacked/*" -DestinationPath "dist/TrixSSH-$tag-win64-portable.zip" -Force
+          New-Item -ItemType Directory -Force -Path deploy | Out-Null
+          Move-Item dist/TrixSSH-Setup-*.exe deploy/
+          Move-Item dist/TrixSSH-$tag-win64-portable.zip deploy/
+          Get-ChildItem deploy | Select-Object Name, Length
+
+      - name: Prepare release assets (macOS)
+        if: matrix.id == 'macos'
+        shell: bash
+        run: |
+          mkdir -p deploy
+          VER="${GITHUB_REF_NAME#v}"
+          mv dist/*.dmg deploy/
+          # dmg + zip share the "TrixSSH-<ver>" basename — rename the zip explicitly
+          mv dist/TrixSSH-"$VER".zip deploy/TrixSSH-"$VER"-mac.zip
+          ls -la deploy
+
+      - name: Prepare release assets (Linux)
+        if: matrix.id == 'linux'
+        shell: bash
+        run: |
+          mkdir -p deploy
+          mv dist/*.AppImage deploy/
+          mv dist/*.deb deploy/
+          ls -la deploy
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: trixssh-${{ matrix.id }}
+          path: deploy/*
+          if-no-files-found: error
+
+  assemble:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: rel
+          pattern: trixssh-*
+          merge-multiple: true
+
+      - name: Collect files
+        run: |
+          mkdir -p out
+          mv rel/* out/
+          cp latest.json out/
+          ls -la out
+
+      # prevents the case where "a new release is out but the app doesn't see the update"
+      # (latest.json in the repo stays on an old version; the app reads raw/main/latest.json)
+      - name: Verify latest.json matches the tag
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          LATEST=$(node -p "require('./latest.json').version")
+          if [ "$TAG" != "$LATEST" ]; then
+            echo "::error::latest.json (version $LATEST) does not match tag $TAG — update latest.json before pushing the tag."
+            exit 1
+          fi
+
+      # jsDelivr is a fallback update source in the app — purge, otherwise it lags ~15 min
+      - name: Purge jsDelivr cache for latest.json
+        run: curl -s "https://purge.jsdelivr.net/gh/Hatrix-Digital/TrixSSH@main/latest.json" || true
+
+      # one draft release with: exe + portable zip + dmg/mac zip + AppImage + deb + latest.json
+      - name: Draft release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            out/TrixSSH-Setup-*.exe
+            out/TrixSSH-*-win64-portable.zip
+            out/TrixSSH-*.dmg
+            out/TrixSSH-*-mac.zip
+            out/TrixSSH-*.AppImage
+            out/TrixSSH-*.deb
+            out/latest.json
+          draft: true
+          generate_release_notes: true

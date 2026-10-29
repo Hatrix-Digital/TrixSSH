@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self' file:; script-src 'self' file:; style-src 'self' file: 'unsafe-inline'; img-src 'self' file: data:; font-src 'self' file: data:;" />
+  <title>TrixSSH</title>
+  <link rel="stylesheet" href="../../node_modules/@xterm/xterm/css/xterm.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-theme="dark">
+  <div id="app">
+    <!-- ============ SIDEBAR ============ -->
+    <aside id="sidebar">
+      <div class="side-head">
+        <div class="brand">
+          <svg class="logo" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="2.5" y="3.5" width="19" height="17" rx="3" stroke="url(#g)" stroke-width="1.8"/>
+            <path d="M6.5 8.5 10 12l-3.5 3.5M12.5 16h5" stroke="url(#g)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs><linearGradient id="g" x1="2" y1="3" x2="22" y2="21"><stop stop-color="#8b7cff"/><stop offset="1" stop-color="#38e0ff"/></linearGradient></defs>
+          </svg>
+          <span class="brand-txt">TrixSSH</span>
+        </div>
+        <button id="btnCollapse" class="icon-btn" title="Sažmi/raširi sidebar">«</button>
+      </div>
+
+      <nav id="nav" class="nav">
+        <button class="nav-item" data-view="dashboard" title="Dashboard (Ctrl+1)"><span class="nav-ic">▤</span><span class="nav-lbl">Dashboard</span></button>
+        <button class="nav-item" data-view="snippets" title="Naredbe (Ctrl+2)"><span class="nav-ic">⚡</span><span class="nav-lbl">Naredbe</span></button>
+        <button class="nav-item" data-view="sftp" title="SFTP (Ctrl+3)"><span class="nav-ic">⇅</span><span class="nav-lbl">SFTP</span></button>
+        <button class="nav-item" data-view="terminal" title="Terminal (Ctrl+4)"><span class="nav-ic">⌨</span><span class="nav-lbl">Terminal</span></button>
+      </nav>
+
+      <div class="conn-head"><span>Veze</span></div>
+      <div id="connList" class="conn-list"></div>
+
+      <div class="side-foot">
+        <button id="btnAddHostIcon" class="nav-item" title="Novi server (Ctrl+N)" data-act="addHost">
+          <span class="nav-ic">＋</span><span class="nav-lbl">Novi server</span>
+        </button>
+        <div class="foot-row">
+          <button id="btnTheme" class="icon-btn" title="Promijeni temu">☾</button>
+          <button id="btnSettings" class="icon-btn" title="Postavke (Ctrl+,)">⚙</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN AREA ============ -->
+    <main id="main">
+
+      <!-- ============ VIEW: TERMINAL ============ -->
+      <section id="viewTerminal" class="view hidden">
+        <div id="tabbar"></div>
+        <div id="workspace">
+          <div id="welcome">
+            <svg class="biglogo" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="2.5" y="3.5" width="19" height="17" rx="3" stroke="url(#g2)" stroke-width="1.4"/>
+              <path d="M6.5 8.5 10 12l-3.5 3.5M12.5 16h5" stroke="url(#g2)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              <defs><linearGradient id="g2" x1="2" y1="3" x2="22" y2="21"><stop stop-color="#8b7cff"/><stop offset="1" stop-color="#38e0ff"/></linearGradient></defs>
+            </svg>
+            <h1>TrixSSH</h1>
+            <p>Sve što trebaš u jednom prozoru:</p>
+
+            <div class="feat-grid">
+              <div class="feat"><span class="fe-ic">▤</span><span><b>SFTP preglednik</b>upload, download i navigacija s dvije ploče</span></div>
+              <div class="feat"><span class="fe-ic">⇉</span><span><b>Broadcast</b>komanda na više servera odjednom</span></div>
+              <div class="feat"><span class="fe-ic">⚡</span><span><b>Live metrike</b>CPU · RAM · DISK · load u realnom vremenu</span></div>
+              <div class="feat"><span class="fe-ic">⌨</span><span><b>Naredbe</b>tvoje snippeti na jedan klik</span></div>
+            </div>
+
+            <button id="btnWelcomeAdd" class="btn-primary">+ Dodaj prvi server</button>
+
+            <div class="hints">
+              <div class="hint"><kbd>Ctrl</kbd>+<kbd>1..4</kbd> <span>viewovi</span>&nbsp;&nbsp;·&nbsp;&nbsp;<kbd>Ctrl</kbd>+<kbd>T</kbd> <span>nova veza</span>&nbsp;&nbsp;·&nbsp;&nbsp;<kbd>Ctrl</kbd>+<kbd>W</kbd> <span>zatvori</span>&nbsp;&nbsp;·&nbsp;&nbsp;<kbd>Ctrl</kbd>+<kbd>R</kbd> <span>reconnect</span></div>
+              <div class="hint"><kbd>Ctrl</kbd>+<kbd>B</kbd> <span>broadcast</span>&nbsp;&nbsp;·&nbsp;&nbsp;<kbd>Ctrl</kbd>+<kbd>E</kbd> <span>snippet</span>&nbsp;&nbsp;·&nbsp;&nbsp;<kbd>Ctrl</kbd>+<kbd>,</kbd> <span>postavke</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ VIEW: DASHBOARD ============ -->
+      <section id="viewDashboard" class="view hidden">
+        <div class="page-head">
+          <h2>Dashboard</h2>
+          <div class="page-actions">
+            <button id="btnDashRefresh" class="mini" title="Osvježi sve monitorke">⟳ Osvježi</button>
+            <button id="btnDashAdd" class="btn-primary" title="Novi server (Ctrl+N)">+ Novi server</button>
+          </div>
+        </div>
+        <div class="page-scroll">
+          <div id="dashGrid" class="dash-grid"></div>
+          <div id="dashEmpty" class="page-empty hidden">
+            <div class="pe-ic">▤</div>
+            <b>Nema servera</b>
+            <span>Dodaj prvi server da vidiš live metrike.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ VIEW: SNIPPETS ============ -->
+      <section id="viewSnippets" class="view hidden">
+        <div class="page-head">
+          <h2>Naredbe</h2>
+          <div class="page-actions">
+            <input id="snipFilter" type="text" placeholder="Traži naredbu…" autocomplete="off" spellcheck="false" />
+            <button id="btnNewSnip" class="btn-primary" title="Nova naredba (Ctrl+E)">+ Nova naredba</button>
+          </div>
+        </div>
+        <div class="page-scroll">
+          <div id="snipGrid" class="snip-grid"></div>
+          <div id="snipEmpty" class="page-empty hidden">
+            <div class="pe-ic">⚡</div>
+            <b>Još nema naredbi</b>
+            <span>Spremi često korištene komande i pokreći ih na jedan klik.</span>
+            <button id="btnNewSnip2" class="btn-primary">+ Dodaj naredbu</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ VIEW: SFTP ============ -->
+      <section id="viewSftp" class="view hidden"></section>
+
+      <!-- ============ VIEW: SETTINGS ============ -->
+      <section id="viewSettings" class="view hidden">
+        <div class="page-head">
+          <h2>Postavke</h2>
+          <div class="page-actions">
+            <button id="btnSettings2" class="mini" title="Ponovno učitaj postavke">⟳</button>
+          </div>
+        </div>
+        <div class="page-scroll">
+          <div id="settingsWrap" class="settings-wrap"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ============ STATUSBAR ============ -->
+  <div id="statusbar">
+    <div class="left"><span id="sbStatus">Ready</span></div>
+    <div class="right"><span id="sbCounts"></span><span class="cnt-sep"></span><b>TrixSSH</b>&nbsp;v1.0</div>
+  </div>
+
+  <!-- ============ MODAL: SERVER ============ -->
+  <div id="modalOverlay" class="hidden">
+    <form id="hostForm" class="modal" novalidate>
+      <h2 id="modalTitle">Novi server</h2>
+
+      <div class="field-row">
+        <div class="field" style="flex:2">
+          <label for="fLabel">Naziv</label>
+          <input id="fLabel" type="text" placeholder="npr. web-server" autocomplete="off" spellcheck="false" />
+        </div>
+        <div class="field" style="flex:1">
+          <label for="fPort">Port</label>
+          <input id="fPort" type="text" inputmode="numeric" value="22" autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field" style="flex:2">
+          <label for="fHost">Host / IP</label>
+          <input id="fHost" type="text" placeholder="npr. 93.184.0.1 ili moj.server.com" autocomplete="off" spellcheck="false" />
+        </div>
+        <div class="field" style="flex:1">
+          <label for="fUser">Korisnik</label>
+          <input id="fUser" type="text" placeholder="root" autocomplete="off" spellcheck="false" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="fAuth">Način prijave</label>
+        <select id="fAuth">
+          <option value="password">Lozinka</option>
+          <option value="key">Privatni ključ</option>
+        </select>
+      </div>
+
+      <div class="field" id="rowPassword">
+        <label for="fPassword">Lozinka</label>
+        <input id="fPassword" type="password" autocomplete="off" placeholder="" />
+        <small class="keep-note hidden" id="notePassword">Ostavi prazno za sačuvanu lozinku.</small>
+      </div>
+
+      <div id="rowKey" class="hidden">
+        <div class="field">
+          <div class="field-label-row">
+            <label for="fKey">Privatni ključ (OpenSSH format)</label>
+            <button type="button" id="btnPickKey" class="mini" title="Učitaj ključ iz datoteke">📂 Odaberi datoteku…</button>
+          </div>
+          <textarea id="fKey" rows="5" placeholder="Odaberi datoteku ključa ili zalijepi sadržaj…" spellcheck="false"></textarea>
+          <small class="keep-note hidden" id="noteKey">Ostavi prazno za sačuvani ključ.</small>
+        </div>
+        <div class="field">
+          <label for="fPassphrase">Passphrase ključa (opcionalno)</label>
+          <input id="fPassphrase" type="password" autocomplete="off" placeholder="" />
+          <small class="keep-note hidden" id="notePass">Ostavi prazno za sačuvanu passphrase.</small>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Boja</label>
+        <div id="colorSwatches" class="swatches"></div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" id="btnCancel" class="btn-ghost">Odustani</button>
+        <button type="submit" id="btnSave" class="btn-primary">Spremi server</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ============ MODAL: SNIPPET ============ -->
+  <div id="snippetOverlay" class="hidden">
+    <form id="snipForm" class="modal" novalidate>
+      <h2 id="snipTitle">Nova naredba</h2>
+      <div class="field">
+        <label for="snipName">Naziv</label>
+        <input id="snipName" type="text" placeholder="npr. Upoznaj server" autocomplete="off" spellcheck="false" />
+      </div>
+      <div class="field">
+        <label for="snipCmd">Komanda</label>
+        <textarea id="snipCmd" rows="4" placeholder="uptime && df -h && free -h" spellcheck="false" style="font-family: Consolas, 'Cascadia Mono', monospace"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="snipCancel" class="btn-ghost">Odustani</button>
+        <button type="submit" class="btn-primary">Spremi naredbu</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ============ MODAL: BROADCAST ============ -->
+  <div id="broadcastOverlay" class="hidden">
+    <div class="modal">
+      <h2>Broadcast — izvrši na više veza</h2>
+      <div class="field">
+        <label>Spojene veze</label>
+        <div id="bcastList" class="bcast-list"></div>
+      </div>
+      <div class="field">
+        <label for="bcastCmd">Komanda za poslati</label>
+        <input id="bcastCmd" type="text" placeholder="npr. systemctl status nginx" spellcheck="false" style="font-family: Consolas, monospace" />
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="bcastCancel" class="btn-ghost">Odustani</button>
+        <button type="button" id="bcastSend" class="btn-primary">⇉ Pošalji</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: PROMPT ============ -->
+  <div id="renameOverlay" class="hidden">
+    <div class="modal modal-sm">
+      <h2 id="renTitle">Naziv</h2>
+      <div class="field">
+        <input id="renInput" type="text" spellcheck="false" />
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="renCancel" class="btn-ghost">Odustani</button>
+        <button type="button" id="renOk" class="btn-primary">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ HOST PICKER (SFTP) ============ -->
+  <div id="pickerOverlay" class="hidden">
+    <div class="picker">
+      <div class="pick-search">
+        <span class="pick-ic">⌕</span>
+        <input id="pickInput" placeholder="Odaberi server…" autocomplete="off" spellcheck="false" />
+      </div>
+      <div id="pickList" class="pick-list"></div>
+      <div class="pick-foot">
+        <span><i>↑</i><i>↓</i> navigacija</span>
+        <span><i>⏎</i> odabir</span>
+        <span><i>esc</i> zatvori</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: UPDATE ============ -->
+  <div id="updateOverlay" class="hidden">
+    <div class="modal modal-sm">
+      <h2 id="uTitle">Nova verzija</h2>
+      <div id="uInfo" class="u-info"></div>
+      <div id="uProgressWrap" class="hidden">
+        <div class="prog-label" id="uProgLabel"></div>
+        <div class="prog-bar"><div class="prog-fill" id="uProgFill"></div></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="uClose" class="btn-ghost">Kasnije</button>
+        <button type="button" id="uDownload" class="btn-primary">⬇ Preuzmi</button>
+        <button type="button" id="uInstall" class="btn-primary hidden">⚙ Instaliraj sada</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="hidden"></div>
+
+  <script src="../../node_modules/@xterm/xterm/lib/xterm.js"></script>
+  <script src="../../node_modules/@xterm/addon-fit/lib/addon-fit.js"></script>
+  <script src="i18n.js"></script>
+  <script src="common.js"></script>
+  <script src="sftp.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+# TrixSSH
+
+Fast desktop SSH client with tabs, SFTP and live metrics. Inspired by OmnySSH.

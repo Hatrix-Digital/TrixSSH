@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TrixSSH — Fast, Beautiful &amp; Local Modern Desktop SSH Client</title>
+  <meta name="description" content="TrixSSH is a fast, modern desktop SSH client for Windows, macOS and Linux. Features multi-tabs, real SFTP, live metrics and zero telemetry. Download free." />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="keywords" content="SSH client, desktop SSH, SFTP manager, server monitoring, Linux terminal, Putty alternative, Termius alternative, local SSH" />
+  <meta name="author" content="Hatrix Digital" />
+  <meta name="theme-color" content="#0a0b10" />
+  <link rel="canonical" href="https://trixssh.hatrix.de/" />
+  <link rel="icon" href="assets/icon.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://trixssh.hatrix.de/" />
+  <meta property="og:title" content="TrixSSH — Fast, Beautiful and Local SSH Client" />
+  <meta property="og:description" content="Modern desktop SSH client with tabs, SFTP, live server metrics and zero telemetry. Free &amp; open source." />
+  <meta property="og:image" content="https://trixssh.hatrix.de/assets/og-preview.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="TrixSSH — Fast, Beautiful and Local SSH Client" />
+  <meta name="twitter:description" content="Modern desktop SSH client with tabs, SFTP, live server metrics and zero telemetry. Free &amp; open source." />
+  <meta name="twitter:image" content="https://trixssh.hatrix.de/assets/og-preview.png" />
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "TrixSSH",
+    "operatingSystem": "Windows 10, Windows 11, macOS, Linux",
+    "applicationCategory": "DeveloperApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "description": "A modern desktop SSH client built with tabs, SFTP, live server metrics, snippets and broadcast. Zero telemetry, 100% local.",
+    "softwareVersion": "1.0.0",
+    "author": {
+      "@type": "Organization",
+      "name": "Hatrix Digital",
+      "url": "https://hatrix.de"
+    },
+    "downloadUrl": "https://trixssh.hatrix.de/#download"
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            base: '#0a0b10',
+            panel: '#0f172a',
+            card: '#111827',
+          },
+          boxShadow: {
+            glow: '0 0 80px rgba(99,102,241,0.25)',
+            'glow-cyan': '0 0 60px rgba(34,211,238,0.2)',
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-base text-slate-100 font-sans antialiased overflow-x-hidden">
+
+  <!-- Background -->
+  <div class="fixed inset-0 -z-10 overflow-hidden">
+    <div class="absolute inset-0 bg-[#0a0b10]"></div>
+    <!-- grid -->
+    <svg class="absolute inset-0 h-full w-full opacity-[0.15]" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+          <path d="M 48 0 L 0 0 0 48" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#grid)" />
+    </svg>
+    <!-- glows -->
+    <div class="absolute -top-40 -left-40 h-[520px] w-[520px] rounded-full bg-indigo-600/30 blur-3xl"></div>
+    <div class="absolute top-1/3 right-[-120px] h-[600px] w-[600px] rounded-full bg-cyan-500/20 blur-3xl"></div>
+    <div class="absolute bottom-[-200px] left-1/3 h-[500px] w-[500px] rounded-full bg-fuchsia-600/20 blur-3xl"></div>
+  </div>
+
+  <!-- Nav -->
+  <header class="sticky top-0 z-50 backdrop-blur-xl bg-base/70 border-b border-white/5">
+    <div class="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
+      <a href="#top" class="flex items-center gap-2.5 font-semibold text-lg">
+        <img src="assets/icon.png" alt="TrixSSH" class="h-8 w-8 rounded-lg" />
+        <span>TrixSSH</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-8 text-sm text-slate-300">
+        <a href="#features" class="hover:text-white transition">Features</a>
+        <a href="#screenshots" class="hover:text-white transition">Screenshots</a>
+        <a href="#download" class="hover:text-white transition">Download</a>
+        <a href="https://github.com/Hatrix-Digital/TrixSSH" target="_blank" rel="noopener" class="hover:text-white transition">GitHub</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <a href="https://github.com/Hatrix-Digital/TrixSSH/releases/latest" target="_blank" rel="noopener" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-slate-200 border border-white/10 hover:bg-white/5 transition">Releases</a>
+        <a href="#download" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-gradient-to-r from-cyan-400 to-indigo-500 text-slate-900 hover:opacity-90 transition shadow-lg shadow-cyan-500/20">Download</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="relative pt-20 pb-8 md:pt-28 md:pb-12">
+      <div class="mx-auto max-w-7xl px-6 grid grid-cols-1 lg:grid-cols-2 items-center gap-12">
+        <!-- Left -->
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-cyan-400/30 bg-cyan-400/5 text-cyan-300 text-xs font-medium mb-6">
+            <span class="h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span>
+            v1.0.0 — now available for Windows, macOS &amp; Linux
+          </div>
+          <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.05]">
+            SSH, but <span class="bg-gradient-to-r from-cyan-300 via-indigo-400 to-fuchsia-400 bg-clip-text text-transparent">fast</span>,<br/>
+            beautiful and <span class="bg-gradient-to-r from-indigo-400 to-fuchsia-400 bg-clip-text text-transparent">local</span>.
+          </h1>
+          <p class="mt-6 text-lg text-slate-300 max-w-xl leading-relaxed">
+            TrixSSH is a modern desktop SSH client with tabs, SFTP, live server metrics, snippets and broadcast — all in one window.
+            <span class="text-white font-medium">No telemetry. Your data stays on your machine.</span>
+          </p>
+
+          <div class="mt-8 flex flex-wrap items-center gap-3">
+            <a id="ctaDownload" href="#download" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-semibold bg-gradient-to-r from-cyan-400 to-indigo-500 text-slate-900 hover:opacity-90 transition shadow-xl shadow-cyan-500/25">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span id="ctaLabel">Download for Windows</span>
+            </a>
+            <a href="https://github.com/Hatrix-Digital/TrixSSH" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-semibold border border-white/15 text-slate-100 hover:bg-white/5 transition">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.12 3.05.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.41-5.25 5.69.41.36.78 1.06.78 2.14 0 1.55-.02 2.8-.02 3.18 0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
+              View on GitHub
+              <span id="ghStars" class="ml-1 px-2 py-0.5 rounded-md bg-white/10 text-xs font-mono">—</span>
+            </a>
+          </div>
+
+          <div class="mt-8 flex flex-wrap gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-slate-300">
+              <svg class="h-3.5 w-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              0 Telemetry
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-slate-300">
+              <svg class="h-3.5 w-3.5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Local-first
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-slate-300">
+              <svg class="h-3.5 w-3.5 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+              MIT License
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-slate-300">
+              <svg class="h-3.5 w-3.5 text-fuchsia-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              Multi-tab
+            </span>
+          </div>
+        </div>
+
+        <!-- Right: Window mockup -->
+        <div class="relative">
+          <div class="absolute -inset-10 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.25),rgba(34,211,238,0.15),transparent_70%)] blur-2xl"></div>
+          <div class="absolute -inset-6 bg-gradient-to-r from-cyan-500/20 to-indigo-500/20 blur-3xl rounded-3xl"></div>
+          <div class="relative rounded-2xl border border-white/10 bg-slate-900/80 backdrop-blur-xl shadow-2xl shadow-indigo-500/10 overflow-hidden">
+            <!-- title bar -->
+            <div class="flex items-center gap-2 px-4 py-3 border-b border-white/5 bg-white/[0.02]">
+              <span class="h-3 w-3 rounded-full bg-red-500/90"></span>
+              <span class="h-3 w-3 rounded-full bg-yellow-500/90"></span>
+              <span class="h-3 w-3 rounded-full bg-green-500/90"></span>
+              <span class="ml-3 text-xs text-slate-400 font-mono">trixssh — web-prod</span>
+              <span class="ml-auto inline-flex items-center gap-1.5 text-[10px] text-emerald-400 font-mono">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span> LIVE
+              </span>
+            </div>
+            <div class="grid grid-cols-3 min-h-[360px]">
+              <!-- Terminal -->
+              <div class="col-span-2 p-4 font-mono text-[13px] leading-6 text-slate-300 border-r border-white/5">
+                <div id="mockTerm"></div>
+              </div>
+              <!-- Metrics sidebar -->
+              <div class="col-span-1 p-4 space-y-4 bg-white/[0.01]">
+                <div class="text-[10px] uppercase tracking-widest text-slate-500">Server metrics</div>
+                <div>
+                  <div class="flex justify-between text-xs mb-1.5"><span class="text-slate-300">CPU</span><span class="text-cyan-300 font-mono">42%</span></div>
+                  <div class="h-1.5 rounded-full bg-white/5 overflow-hidden"><div class="h-full bg-gradient-to-r from-cyan-400 to-indigo-500 metric-bar" style="width:42%"></div></div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-xs mb-1.5"><span class="text-slate-300">RAM</span><span class="text-indigo-300 font-mono">68%</span></div>
+                  <div class="h-1.5 rounded-full bg-white/5 overflow-hidden"><div class="h-full bg-gradient-to-r from-indigo-400 to-fuchsia-400 metric-bar" style="width:68%"></div></div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-xs mb-1.5"><span class="text-slate-300">DISK</span><span class="text-fuchsia-300 font-mono">31%</span></div>
+                  <div class="h-1.5 rounded-full bg-white/5 overflow-hidden"><div class="h-full bg-gradient-to-r from-fuchsia-400 to-pink-500 metric-bar" style="width:31%"></div></div>
+                </div>
+                <!-- sparkline -->
+                <div class="mt-2">
+                  <div class="text-[10px] text-slate-500 mb-1">CPU (60s)</div>
+                  <svg viewBox="0 0 120 40" class="w-full h-10">
+                    <polyline points="0,30 10,26 20,28 30,20 40,22 50,16 60,18 70,12 80,14 90,10 100,12 110,8 120,6"
+                      fill="none" stroke="url(#g)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <defs>
+                      <linearGradient id="g" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stop-color="#22d3ee"/>
+                        <stop offset="100%" stop-color="#a78bfa"/>
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </div>
+                <div class="pt-2 border-t border-white/5 text-[10px] text-slate-500 font-mono">
+                  up 42d · Ubuntu 24.04
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- floating chip -->
+          <div class="absolute -bottom-4 -left-4 px-3 py-2 rounded-xl bg-slate-900/90 border border-white/10 backdrop-blur shadow-lg text-xs font-mono text-cyan-300">
+            <span class="text-slate-500">$</span> systemctl status nginx <span class="text-emerald-400">active</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Platforms -->
+    <section class="py-12 border-y border-white/5 bg-white/[0.01]">
+      <div class="mx-auto max-w-7xl px-6">
+        <p class="text-center text-xs uppercase tracking-[0.2em] text-slate-500 mb-6">Built for the platforms you use</p>
+        <div class="flex flex-wrap justify-center items-center gap-12 md:gap-20">
+          <div class="group flex items-center gap-3 text-slate-400 hover:text-white transition">
+            <svg class="h-8 w-8 opacity-60 group-hover:opacity-100 group-hover:drop-shadow-[0_0_12px_rgba(34,211,238,0.6)] transition" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.45H0zm10.949-1.5L24 0v11.4H10.949zM0 12.6h9.75v9.45L0 20.699zm10.949 0H24V24l-12.9-1.8"/></svg>
+            <span class="font-medium">Windows</span>
+          </div>
+          <div class="group flex items-center gap-3 text-slate-400 hover:text-white transition">
+            <svg class="h-8 w-8 opacity-60 group-hover:opacity-100 group-hover:drop-shadow-[0_0_12px_rgba(34,211,238,0.6)] transition" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            <span class="font-medium">macOS</span>
+          </div>
+          <div class="group flex items-center gap-3 text-slate-400 hover:text-white transition">
+            <svg class="h-8 w-8 opacity-60 group-hover:opacity-100 group-hover:drop-shadow-[0_0_12px_rgba(34,211,238,0.6)] transition" viewBox="0 0 24 24" fill="currentColor"><path d="M12.504 0C5.77 0 .304 5.516.304 12.25c0 5.39 3.504 9.96 8.348 11.58.61.11.83-.26.83-.58 0-.29-.01-1.05-.02-2.06-3.4.74-4.11-1.64-4.11-1.64-.55-1.4-1.35-1.77-1.35-1.77-1.1-.75.08-.74.08-.74 1.22.09 1.86 1.25 1.86 1.25 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.77-1.62-2.71-.31-5.57-1.36-5.57-6.05 0-1.34.48-2.43 1.26-3.29-.13-.31-.55-1.56.12-3.25 0 0 1.03-.33 3.38 1.25a11.7 11.7 0 0 1 3.08-.41c1.04 0 2.09.14 3.08.41 2.34-1.58 3.37-1.25 3.37-1.25.67 1.69.25 2.94.12 3.25.79.86 1.26 1.95 1.26 3.29 0 4.7-2.87 5.73-5.6 6.03.44.38.83 1.12.83 2.26 0 1.64-.02 2.96-.02 3.36 0 .32.22.7.84.58 4.84-1.62 8.34-6.19 8.34-11.58C23.69 5.516 18.23 0 12.504 0z"/></svg>
+            <span class="font-medium">Linux</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Bento -->
+    <section id="features" class="py-24">
+      <div class="mx-auto max-w-7xl px-6">
+        <div class="max-w-2xl mb-12">
+          <p class="text-sm font-semibold text-cyan-400 uppercase tracking-widest mb-3">Features</p>
+          <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight">Everything you need, <span class="bg-gradient-to-r from-cyan-300 to-indigo-400 bg-clip-text text-transparent">nothing you don't</span></h2>
+          <p class="mt-4 text-slate-400 text-lg">A focused SSH client that stays out of your way — fast tabs, real SFTP, live metrics and a keyboard-first workflow.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Card 1: Live Server Health & Metrics (wide, 2 cols) -->
+          <div class="md:col-span-2 rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur p-6 hover:border-purple-500/30 transition-all">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-2">
+                <svg class="h-5 w-5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-4 4"/></svg>
+                <h3 class="text-lg font-semibold text-white">Live Server Health &amp; Metrics</h3>
+              </div>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-medium text-emerald-400">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                LIVE
+              </span>
+            </div>
+            <p class="text-sm text-slate-400 mb-5">CPU, RAM, Disk I/O and top processes — refreshed in real time for every server.</p>
+            <div class="space-y-3">
+              <div>
+                <div class="flex justify-between text-xs mb-1.5"><span class="text-slate-300">CPU</span><span class="text-cyan-300 font-mono">42%</span></div>
+                <div class="h-2 rounded-full bg-white/5 overflow-hidden"><div class="h-full bg-gradient-to-r from-cyan-400 to-indigo-500 metric-bar" style="width:42%"></div></div>
+              </div>
+              <div>
+                <div class="flex justify-between text-xs mb-1.5"><span class="text-slate-300">RAM</span><span class="text-indigo-300 font-mono">68%</span></div>
+                <div class="h-2 rounded-full bg-white/5 overflow-hidden"><div class="h-full bg-gradient-to-r from-indigo-400 to-fuchsia-400 metric-bar" style="width:68%"></div></div>
+              </div>
+              <div>
+                <div class="flex justify-between text-xs mb-1.5"><span class="text-slate-300">Disk I/O</span><span class="text-fuchsia-300 font-mono">31%</span></div>
+                <div class="h-2 rounded-full bg-white/5 overflow-hidden"><div class="h-full bg-gradient-to-r from-fuchsia-400 to-pink-500 metric-bar" style="width:31%"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Instant Multi-Tab & Splits -->
+          <div class="rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur p-6 hover:border-purple-500/30 transition-all">
+            <div class="flex items-center gap-2 mb-2">
+              <svg class="h-5 w-5 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <h3 class="text-base font-semibold text-white">Instant Multi-Tab &amp; Splits</h3>
+            </div>
+            <p class="text-xs text-slate-400 mb-4">Clean tabbing interface with fast shortcuts.</p>
+            <div class="flex items-center gap-1.5 mb-3">
+              <span class="px-2.5 py-1 rounded-md bg-white/10 border border-white/10 text-[11px] font-mono text-slate-200">web-prod</span>
+              <span class="px-2.5 py-1 rounded-md bg-white/5 border border-white/5 text-[11px] font-mono text-slate-400">db-main</span>
+              <span class="px-2.5 py-1 rounded-md bg-white/5 border border-white/5 text-[11px] font-mono text-slate-400">+ </span>
+            </div>
+            <div class="flex items-center gap-2 text-xs text-slate-400">
+              <kbd>Ctrl+T</kbd>
+              <span>new tab</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Command Snippets & Broadcast -->
+          <div class="rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur p-6 hover:border-purple-500/30 transition-all">
+            <div class="flex items-center gap-2 mb-2">
+              <svg class="h-5 w-5 text-fuchsia-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5M19.1 4.9C23 8.8 23 15.2 19.1 19.1"/><circle cx="12" cy="12" r="2"/></svg>
+              <h3 class="text-base font-semibold text-white">Command Snippets &amp; Broadcast</h3>
+            </div>
+            <p class="text-xs text-slate-400 mb-4">Saved scripts, one click to all sessions.</p>
+            <div class="space-y-2">
+              <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/5 text-[11px] font-mono text-slate-300">
+                <span class="text-slate-500">$</span> systemctl restart nginx
+                <span class="ml-auto text-xs text-slate-500">→ all</span>
+              </div>
+              <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/5 text-[11px] font-mono text-slate-300">
+                <span class="text-slate-500">$</span> tail -f /var/log/app.log
+                <span class="ml-auto text-xs text-slate-500">→ all</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Zero Telemetry, 100% Local (full width) -->
+          <div class="md:col-span-3 rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur p-6 hover:border-purple-500/30 transition-all flex flex-col md:flex-row md:items-center gap-6">
+            <div class="h-12 w-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center flex-shrink-0">
+              <svg class="h-6 w-6 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><rect x="9" y="11" width="6" height="7" rx="1"/><path d="M10 11V9a2 2 0 1 1 4 0v2"/></svg>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-lg font-semibold text-white">Zero Telemetry, 100% Local</h3>
+              <p class="text-sm text-slate-400 mt-1">Your SSH keys, history and sessions stay only on your machine. Passwords encrypted with OS keychain (DPAPI/Keychain). Backup &amp; migration via encrypted <span class="font-mono text-slate-300">.trixbak</span> files.</p>
+            </div>
+            <div class="flex gap-2 flex-wrap">
+              <span class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-slate-300">DPAPI</span>
+              <span class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-slate-300">Keychain</span>
+              <span class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-slate-300">AES-256-GCM</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screenshots -->
+    <section id="screenshots" class="py-24 bg-white/[0.01] border-y border-white/5">
+      <div class="mx-auto max-w-7xl px-6">
+        <div class="max-w-2xl mb-12">
+          <p class="text-sm font-semibold text-cyan-400 uppercase tracking-widest mb-3">Screenshots</p>
+          <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight">See it in <span class="bg-gradient-to-r from-cyan-300 to-indigo-400 bg-clip-text text-transparent">action</span></h2>
+          <p class="mt-4 text-slate-400 text-lg">All data shown is fictional demo data — TrixSSH never phones home.</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <figure class="group rounded-2xl border border-white/10 bg-slate-900/60 overflow-hidden hover:border-cyan-400/30 transition">
+            <img src="assets/screenshots/dashboard.png" alt="Dashboard" class="w-full aspect-[16/10] object-cover group-hover:scale-[1.03] transition duration-500" loading="lazy" />
+            <figcaption class="px-4 py-3 text-sm text-slate-300 font-medium">Dashboard — live metrics</figcaption>
+          </figure>
+          <figure class="group rounded-2xl border border-white/10 bg-slate-900/60 overflow-hidden hover:border-cyan-400/30 transition">
+            <img src="assets/screenshots/sftp.png" alt="SFTP" class="w-full aspect-[16/10] object-cover group-hover:scale-[1.03] transition duration-500" loading="lazy" />
+            <figcaption class="px-4 py-3 text-sm text-slate-300 font-medium">SFTP — dual pane</figcaption>
+          </figure>
+          <figure class="group rounded-2xl border border-white/10 bg-slate-900/60 overflow-hidden hover:border-cyan-400/30 transition">
+            <img src="assets/screenshots/sftp-picker.png" alt="SFTP picker" class="w-full aspect-[16/10] object-cover group-hover:scale-[1.03] transition duration-500" loading="lazy" />
+            <figcaption class="px-4 py-3 text-sm text-slate-300 font-medium">SFTP server picker</figcaption>
+          </figure>
+          <figure class="group rounded-2xl border border-white/10 bg-slate-900/60 overflow-hidden hover:border-cyan-400/30 transition">
+            <img src="assets/screenshots/snippets.png" alt="Snippets" class="w-full aspect-[16/10] object-cover group-hover:scale-[1.03] transition duration-500" loading="lazy" />
+            <figcaption class="px-4 py-3 text-sm text-slate-300 font-medium">Snippets — saved commands</figcaption>
+          </figure>
+          <figure class="group rounded-2xl border border-white/10 bg-slate-900/60 overflow-hidden hover:border-cyan-400/30 transition">
+            <img src="assets/screenshots/host-modal.png" alt="New server" class="w-full aspect-[16/10] object-cover group-hover:scale-[1.03] transition duration-500" loading="lazy" />
+            <figcaption class="px-4 py-3 text-sm text-slate-300 font-medium">New server modal</figcaption>
+          </figure>
+          <figure class="group rounded-2xl border border-white/10 bg-slate-900/60 overflow-hidden hover:border-cyan-400/30 transition">
+            <img src="assets/screenshots/settings.png" alt="Settings" class="w-full aspect-[16/10] object-cover group-hover:scale-[1.03] transition duration-500" loading="lazy" />
+            <figcaption class="px-4 py-3 text-sm text-slate-300 font-medium">Settings — theme &amp; languages</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- Shortcuts -->
+    <section class="py-12 md:py-16">
+      <div class="mx-auto max-w-7xl px-6">
+        <div class="max-w-2xl mb-12">
+          <p class="text-sm font-semibold text-cyan-400 uppercase tracking-widest mb-3">Keyboard first</p>
+          <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight">Shortcuts that <span class="bg-gradient-to-r from-indigo-400 to-fuchsia-400 bg-clip-text text-transparent">stick</span></h2>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10"><kbd class="px-2 py-1 rounded-md bg-slate-800 border border-white/10 text-cyan-300 font-mono text-xs">Ctrl+T</kbd><span class="text-sm text-slate-300">New connection</span></div>
+          <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10"><kbd class="px-2 py-1 rounded-md bg-slate-800 border border-white/10 text-cyan-300 font-mono text-xs">Ctrl+W</kbd><span class="text-sm text-slate-300">Close tab</span></div>
+          <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10"><kbd class="px-2 py-1 rounded-md bg-slate-800 border border-white/10 text-cyan-300 font-mono text-xs">Ctrl+R</kbd><span class="text-sm text-slate-300">Reconnect</span></div>
+          <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10"><kbd class="px-2 py-1 rounded-md bg-slate-800 border border-white/10 text-cyan-300 font-mono text-xs">Ctrl+B</kbd><span class="text-sm text-slate-300">Broadcast</span></div>
+          <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10"><kbd class="px-2 py-1 rounded-md bg-slate-800 border border-white/10 text-cyan-300 font-mono text-xs">Ctrl+E</kbd><span class="text-sm text-slate-300">New snippet</span></div>
+          <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10"><kbd class="px-2 py-1 rounded-md bg-slate-800 border border-white/10 text-cyan-300 font-mono text-xs">Ctrl+F</kbd><span class="text-sm text-slate-300">Search servers</span></div>
+          <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10"><kbd class="px-2 py-1 rounded-md bg-slate-800 border border-white/10 text-cyan-300 font-mono text-xs">Ctrl+N</kbd><span class="text-sm text-slate-300">New server</span></div>
+          <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10"><kbd class="px-2 py-1 rounded-md bg-slate-800 border border-white/10 text-cyan-300 font-mono text-xs">Ctrl+1..9</kbd><span class="text-sm text-slate-300">Switch tabs</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Download -->
+    <section id="download" class="py-24 bg-white/[0.01] border-t border-white/5">
+      <div class="mx-auto max-w-7xl px-6">
+        <div class="max-w-2xl mb-12">
+          <p class="text-sm font-semibold text-cyan-400 uppercase tracking-widest mb-3">Download</p>
+          <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight">Get <span class="bg-gradient-to-r from-cyan-300 to-indigo-400 bg-clip-text text-transparent">TrixSSH 1.0.0</span></h2>
+          <p class="mt-4 text-slate-400 text-lg">Free and open source. Pick your platform.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="rounded-2xl border border-white/10 bg-slate-900/60 p-6 hover:border-purple-500/40 hover:-translate-y-1 transition-all">
+            <div class="h-12 w-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-3 text-cyan-300">
+              <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.45H0zm10.949-1.5L24 0v11.4H10.949zM0 12.6h9.75v9.45L0 20.699zm10.949 0H24V24l-12.9-1.8"/></svg>
+            </div>
+            <h3 class="text-xl font-bold mb-1">Windows</h3>
+            <p class="text-sm text-slate-400 mb-5">Windows 10/11 (x64)</p>
+            <a href="https://github.com/Hatrix-Digital/TrixSSH/releases/download/v1.0.0/TrixSSH-Setup-1.0.0.exe" class="block w-full text-center px-4 py-2.5 rounded-xl font-semibold bg-gradient-to-r from-cyan-400 to-indigo-500 text-slate-900 hover:opacity-90 transition mb-2">Installer (.exe)</a>
+            <a href="https://github.com/Hatrix-Digital/TrixSSH/releases/download/v1.0.0/TrixSSH-v1.0.0-win64-portable.zip" class="block w-full text-center px-4 py-2.5 rounded-xl font-semibold border border-white/15 text-slate-100 hover:bg-white/5 transition">Portable (.zip)</a>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-slate-900/60 p-6 hover:border-purple-500/40 hover:-translate-y-1 transition-all">
+            <div class="h-12 w-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-3 text-indigo-300">
+              <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            </div>
+            <h3 class="text-xl font-bold mb-1">macOS</h3>
+            <p class="text-sm text-slate-400 mb-5">macOS (unsigned)</p>
+            <a href="https://github.com/Hatrix-Digital/TrixSSH/releases/download/v1.0.0/TrixSSH-1.0.0.dmg" class="block w-full text-center px-4 py-2.5 rounded-xl font-semibold bg-gradient-to-r from-cyan-400 to-indigo-500 text-slate-900 hover:opacity-90 transition mb-2">DMG</a>
+            <a href="https://github.com/Hatrix-Digital/TrixSSH/releases/download/v1.0.0/TrixSSH-1.0.0-mac.zip" class="block w-full text-center px-4 py-2.5 rounded-xl font-semibold border border-white/15 text-slate-100 hover:bg-white/5 transition">ZIP</a>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-slate-900/60 p-6 hover:border-purple-500/40 hover:-translate-y-1 transition-all">
+            <div class="h-12 w-12 rounded-xl bg-fuchsia-500/10 border border-fuchsia-500/20 flex items-center justify-center mb-3 text-fuchsia-300">
+              <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12.504 0C5.77 0 .304 5.516.304 12.25c0 5.39 3.504 9.96 8.348 11.58.61.11.83-.26.83-.58 0-.29-.01-1.05-.02-2.06-3.4.74-4.11-1.64-4.11-1.64-.55-1.4-1.35-1.77-1.35-1.77-1.1-.75.08-.74.08-.74 1.22.09 1.86 1.25 1.86 1.25 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.77-1.62-2.71-.31-5.57-1.36-5.57-6.05 0-1.34.48-2.43 1.26-3.29-.13-.31-.55-1.56.12-3.25 0 0 1.03-.33 3.38 1.25a11.7 11.7 0 0 1 3.08-.41c1.04 0 2.09.14 3.08.41 2.34-1.58 3.37-1.25 3.37-1.25.67 1.69.25 2.94.12 3.25.79.86 1.26 1.95 1.26 3.29 0 4.7-2.87 5.73-5.6 6.03.44.38.83 1.12.83 2.26 0 1.64-.02 2.96-.02 3.36 0 .32.22.7.84.58 4.84-1.62 8.34-6.19 8.34-11.58C23.69 5.516 18.23 0 12.504 0z"/></svg>
+            </div>
+            <h3 class="text-xl font-bold mb-1">Linux</h3>
+            <p class="text-sm text-slate-400 mb-5">x64 (AppImage / deb)</p>
+            <a href="https://github.com/Hatrix-Digital/TrixSSH/releases/download/v1.0.0/TrixSSH-1.0.0-x86_64.AppImage" class="block w-full text-center px-4 py-2.5 rounded-xl font-semibold bg-gradient-to-r from-cyan-400 to-indigo-500 text-slate-900 hover:opacity-90 transition mb-2">AppImage</a>
+            <a href="https://github.com/Hatrix-Digital/TrixSSH/releases/download/v1.0.0/TrixSSH-1.0.0-amd64.deb" class="block w-full text-center px-4 py-2.5 rounded-xl font-semibold border border-white/15 text-slate-100 hover:bg-white/5 transition">DEB</a>
+          </div>
+        </div>
+        <p class="mt-6 text-center text-sm text-slate-400 max-w-3xl mx-auto">
+          SmartScreen / Gatekeeper may warn (not code-signed yet) — choose <em>More info → Run anyway</em> or right-click → Open.
+          AppImage may need <code class="px-1.5 py-0.5 rounded bg-white/10 font-mono text-xs">libfuse2</code>. See all assets on the
+          <a href="https://github.com/Hatrix-Digital/TrixSSH/releases/latest" target="_blank" rel="noopener" class="text-cyan-400 hover:underline">Releases page</a>.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="py-12 border-t border-white/5">
+    <div class="mx-auto max-w-7xl px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-2.5 font-semibold">
+        <img src="assets/icon.png" alt="TrixSSH" class="h-7 w-7 rounded-lg" />
+        <span>TrixSSH</span>
+      </div>
+      <div class="flex flex-wrap gap-6 text-sm text-slate-400">
+        <a href="https://github.com/Hatrix-Digital/TrixSSH" target="_blank" rel="noopener" class="hover:text-white transition">GitHub</a>
+        <a href="https://github.com/Hatrix-Digital/TrixSSH/releases" target="_blank" rel="noopener" class="hover:text-white transition">Releases</a>
+        <a href="https://github.com/Hatrix-Digital/TrixSSH/blob/main/LICENSE" target="_blank" rel="noopener" class="hover:text-white transition">MIT License</a>
+        <a href="https://github.com/Hatrix-Digital/TrixSSH/issues" target="_blank" rel="noopener" class="hover:text-white transition">Issues</a>
+      </div>
+      <p class="text-xs text-slate-500">© 2026 Hatrix Digital · No telemetry · Data stays local.</p>
+    </div>
+  </footer>
+
+  <!-- Lightbox modal -->
+  <div id="lightbox" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/70 opacity-0 transition-opacity duration-300" style="backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+    <button id="lbClose" class="absolute top-5 right-5 h-10 w-10 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 transition flex items-center justify-center" aria-label="Close">
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <button id="lbPrev" class="absolute left-4 top-1/2 -translate-y-1/2 h-11 w-11 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 transition flex items-center justify-center" aria-label="Previous">
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <button id="lbNext" class="absolute right-4 top-1/2 -translate-y-1/2 h-11 w-11 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 transition flex items-center justify-center" aria-label="Next">
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+    <div class="max-w-5xl w-full px-6 flex flex-col items-center gap-4 scale-95 transition-transform duration-300" id="lbContent">
+      <img id="lbImg" src="" alt="" class="max-h-[85vh] max-w-[90vw] w-auto rounded-xl shadow-2xl border border-white/10" />
+      <p id="lbCaption" class="text-sm text-slate-200 font-medium"></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

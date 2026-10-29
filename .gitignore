@@ -1,0 +1,35 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+
+# icon script leftovers
+scripts/tmp/
+
+# environment
+.env
+.env.*
+
+# logs
+*.log
+npm-debug.log*
+
+# OS / editor
+Thumbs.db
+Desktop.ini
+.vs/
+.vscode/
+.idea/
+
+# test artifacts
+$RECYCLE.BIN/
+
+# AI / agent handoff & tooling files
+handoff.md
+AGENTS.md
+CLAUDE.md
+.cursor/
+.claude/
+.aider*
+.opencode/

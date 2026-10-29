@@ -1,0 +1,8 @@
+{
+  "version": "1.0.0",
+  "url": "https://github.com/Hatrix-Digital/TrixSSH/releases/download/v1.0.0/TrixSSH-Setup-1.0.0.exe",
+  "macUrl": "https://github.com/Hatrix-Digital/TrixSSH/releases/download/v1.0.0/TrixSSH-1.0.0.dmg",
+  "linuxUrl": "https://github.com/Hatrix-Digital/TrixSSH/releases/download/v1.0.0/TrixSSH-1.0.0-x86_64.AppImage",
+  "linuxDebUrl": "https://github.com/Hatrix-Digital/TrixSSH/releases/download/v1.0.0/TrixSSH-1.0.0-amd64.deb",
+  "notes": "TrixSSH v1.0.0: SSH client with tabs, SFTP, live metrics, snippets and broadcast. Ships the all-new tray logo icon and a hardened update checker (never hangs silently, always reports a result)."
+}
